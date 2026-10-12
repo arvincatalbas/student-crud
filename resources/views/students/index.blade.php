@@ -18,6 +18,12 @@
     </div>
 @endif
 
+@if (session('error'))
+    <div class="status-banner error">
+        {{ session('error') }}
+    </div>
+@endif
+
 <div class="stat-grid">
     <div class="stat-card">
         <span>Total Students</span>

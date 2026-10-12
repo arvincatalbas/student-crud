@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreStudentRequest;
+use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Student;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class StudentController extends Controller
 {
@@ -18,15 +18,9 @@ class StudentController extends Controller
     }
 
     // POST /api/students
-    public function store(Request $request)
+    public function store(StoreStudentRequest $request)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:students,email'],
-            'course' => ['required', 'string', 'max:255'],
-        ]);
-
-        $student = Student::create($validated);
+        $student = Student::create($request->validated());
 
         return response()->json([
             'message' => 'Student created successfully.',
@@ -41,21 +35,9 @@ class StudentController extends Controller
     }
 
     // PUT/PATCH /api/students/{student}
-    public function update(Request $request, Student $student)
+    public function update(UpdateStudentRequest $request, Student $student)
     {
-        $validated = $request->validate([
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
-            'email' => [
-                'sometimes',
-                'required',
-                'email',
-                'max:255',
-                Rule::unique('students', 'email')->ignore($student->id),
-            ],
-            'course' => ['sometimes', 'required', 'string', 'max:255'],
-        ]);
-
-        $student->update($validated);
+        $student->update($request->validated());
 
         return response()->json([
             'message' => 'Student updated successfully.',

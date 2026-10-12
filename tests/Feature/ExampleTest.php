@@ -41,4 +41,31 @@ class ExampleTest extends TestCase
             'course' => 'Information Technology',
         ]);
     }
+
+    public function test_a_nonexistent_student_edit_redirects_to_the_list(): void
+    {
+        $response = $this->get('/students/999/edit');
+
+        $response->assertRedirect(route('students.index'));
+        $response->assertSessionHas('error', 'Student not found.');
+    }
+
+    public function test_a_student_can_be_partially_updated(): void
+    {
+        $student = \App\Models\Student::create([
+            'name' => 'Original Name',
+            'email' => 'original@example.com',
+            'course' => 'Biology',
+        ]);
+
+        $response = $this->patch(route('students.update', $student), [
+            'course' => 'Computer Science',
+        ]);
+
+        $response->assertRedirect(route('students.index'));
+        $this->assertDatabaseHas('students', [
+            'id' => $student->id,
+            'course' => 'Computer Science',
+        ]);
+    }
 }
