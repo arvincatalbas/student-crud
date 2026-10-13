@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <form action="{{ route('students.update', $student) }}" method="POST" class="student-form">
+        <form action="{{ route('students.update', $student) }}" method="POST" class="student-form confirm-update-form">
             @csrf
             @method('PUT')
 
